@@ -1,10 +1,8 @@
 package com.udacity.gradle.builditbigger;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 
-import com.example.mferraco.jokeactivity.JokeActivity;
 import com.example.mferraco.myapplication.backend.myApi.MyApi;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
@@ -20,6 +18,12 @@ import java.io.IOException;
 class GetJokeAsyncTask extends AsyncTask<Context, Void, String> {
     private static MyApi myApiService = null;
     private Context mContext;
+
+    private GetJokeResponseListener mResponseListener;
+
+    public GetJokeAsyncTask(GetJokeResponseListener responseListener) {
+        mResponseListener = responseListener;
+    }
 
     @Override
     protected String doInBackground(Context... params) {
@@ -52,8 +56,6 @@ class GetJokeAsyncTask extends AsyncTask<Context, Void, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        Intent intent = new Intent(mContext, JokeActivity.class);
-        intent.putExtra(JokeActivity.JOKE, result);
-        mContext.startActivity(intent);
+        mResponseListener.retrievedJoke(result);
     }
 }

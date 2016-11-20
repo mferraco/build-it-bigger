@@ -1,13 +1,16 @@
 package com.udacity.gradle.builditbigger;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.mferraco.jokeactivity.JokeActivity;
 
-public class MainActivity extends ActionBarActivity {
+
+public class MainActivity extends ActionBarActivity implements GetJokeResponseListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +43,14 @@ public class MainActivity extends ActionBarActivity {
 
     public void tellJoke(View view) {
         // kick off the async task which queries the backend for a joke then starts the activity
-        new GetJokeAsyncTask().execute(this);
+        GetJokeAsyncTask task = new GetJokeAsyncTask(this);
+        task.execute(this);
     }
 
-
+    @Override
+    public void retrievedJoke(String joke) {
+        Intent intent = new Intent(this, JokeActivity.class);
+        intent.putExtra(JokeActivity.JOKE, joke);
+        startActivity(intent);
+    }
 }
